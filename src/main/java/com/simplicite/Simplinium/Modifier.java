@@ -1,4 +1,4 @@
-package com.simplicite.librarySimplinium;
+package com.simplicite.Simplinium;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -29,7 +29,7 @@ public class Modifier {
      * @param id ID of the slider
      * @param value Value need to be reached by the slider
      */
-    public static void setQuantity(String id, int value) {
+    public static void setSliderValue(String id, int value) {
         SelenideElement slider = $("#" + id);
         for (int i = 1; i < value; i++) {
             slider.sendKeys(Keys.ARROW_RIGHT);

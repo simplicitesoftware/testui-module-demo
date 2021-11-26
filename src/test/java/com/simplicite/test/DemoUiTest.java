@@ -2,7 +2,7 @@ package com.simplicite.test;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import com.simplicite.librarySimplinium.*;
+import com.simplicite.Simplinium.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({ScreenShooterExtension.class})
-public class SimpliciteTutorial1Test {
+public class DemoUiTest {
 
     @BeforeAll
     public static void setUpAll() {
@@ -57,7 +57,7 @@ public class SimpliciteTutorial1Test {
         Button.next();
         Button.next();
 
-        Modifier.setQuantity("field_demoOrdQuantity", NUMBER);
+        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
         Button.next();
 
         String totalstr = Integer.toString(NUMBER * PRICE);
@@ -77,7 +77,7 @@ public class SimpliciteTutorial1Test {
         Button.next();
         Button.next();
 
-        Modifier.setQuantity("field_demoOrdQuantity", NUMBER);
+        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
         Button.next();
 
         String totalstr = Integer.toString(NUMBER * PRICE2);
@@ -97,7 +97,7 @@ public class SimpliciteTutorial1Test {
         Button.next();
         Button.next();
 
-        Modifier.setQuantity("field_demoOrdQuantity", NUMBER);
+        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
         Button.next();
 
         String totalstr = Integer.toString(NUMBER * PRICE3);
@@ -118,7 +118,7 @@ public class SimpliciteTutorial1Test {
         Button.next();
         Button.next();
 
-        Modifier.setQuantity("field_demoOrdQuantity", NUMBER);
+        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
         Button.next();
 
         Modifier.switchProcessingState("V");
