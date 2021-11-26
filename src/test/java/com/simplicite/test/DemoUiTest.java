@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({ScreenShooterExtension.class})
-public class SimpliciteTutorial1Test {
+public class DemoUiTest {
 
     @BeforeAll
     public static void setUpAll() {
