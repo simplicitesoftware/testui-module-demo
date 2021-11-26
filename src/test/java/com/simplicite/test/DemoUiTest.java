@@ -15,13 +15,10 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static com.simplicite.Simplinium.Form.save;
-import static com.simplicite.Simplinium.Form.setSliderValue;
-import static com.simplicite.Simplinium.General.clickDropDownMenu;
+import static com.simplicite.Simplinium.Form.*;
 import static com.simplicite.Simplinium.General.clickMenuProcess;
 import static com.simplicite.Simplinium.List.find;
 import static com.simplicite.Simplinium.Process.switchProcessingState;
-import static com.simplicite.Simplinium.Process.verifyState;
 import static com.simplicite.test.DataStore.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
