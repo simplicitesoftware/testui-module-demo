@@ -69,12 +69,6 @@ public class DemoUiTest {
         }
     }
 
-    @AfterEach
-    public void close() {
-        clickDropDownMenu(4);
-        SessionManagement.clearCache('u');
-    }
-
     @Test
     public void createOrderCli1() {
         clickMenuProcess(DEMO, "DemoOrderCreate");
