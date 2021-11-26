@@ -3,6 +3,8 @@ package com.simplicite.test;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import com.simplicite.Simplinium.*;
+import com.simplicite.Simplinium.Process;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -13,6 +15,13 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
+import static com.simplicite.Simplinium.Form.save;
+import static com.simplicite.Simplinium.Form.setSliderValue;
+import static com.simplicite.Simplinium.General.clickDropDownMenu;
+import static com.simplicite.Simplinium.General.clickMenuProcess;
+import static com.simplicite.Simplinium.List.find;
+import static com.simplicite.Simplinium.Process.switchProcessingState;
+import static com.simplicite.Simplinium.Process.verifyState;
 import static com.simplicite.test.DataStore.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,85 +71,85 @@ public class DemoUiTest {
 
     @AfterEach
     public void close() {
-        MenuInteraction.clickDropDownMenu(4);
+        clickDropDownMenu(4);
         SessionManagement.clearCache('u');
     }
 
     @Test
     public void createOrderCli1() {
-        MenuInteraction.clickMenuCreateOrder(DEMO, "DemoOrderCreate");
-        Research.find("demoCliCode", CLI001);
-        Button.next();
-        Button.next();
-        Button.next();
+        clickMenuProcess(DEMO, "DemoOrderCreate");
+        find("demoCliCode", CLI001);
+        Process.nextPage();
+        Process.nextPage();
+        Process.nextPage();
 
-        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Button.next();
+        setSliderValue("field_demoOrdQuantity", NUMBER);
+        Process.nextPage();
 
         String totalstr = Integer.toString(NUMBER * PRICE);
         String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
                 .replaceAll("[,]", "")
                 .replaceAll("[.][0-9]*", "");
         assertEquals(totalweb, totalstr);
-        Button.save();
+        save();
     }
 
     @Test
     public void createOrderCli2() {
-        MenuInteraction.clickMenuCreateOrder(DEMO, "DemoOrderCreate");
-        Research.find("demoCliCode", CLI002);
-        Button.next();
-        Research.find("demoSupCode", DY);
-        Button.next();
-        Button.next();
+        clickMenuProcess(DEMO, "DemoOrderCreate");
+        find("demoCliCode", CLI002);
+        Process.nextPage();
+        find("demoSupCode", DY);
+        Process.nextPage();
+        Process.nextPage();
 
-        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Button.next();
+        setSliderValue("field_demoOrdQuantity", NUMBER);
+        Process.nextPage();
 
         String totalstr = Integer.toString(NUMBER * PRICE2);
         String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
                 .replaceAll("[,]", "")
                 .replaceAll("[.][0-9]*", "");
         assertEquals(totalweb, totalstr);
-        Button.save();
+        save();
     }
 
     @Test
     public void createOrderCli3() {
-        MenuInteraction.clickMenuCreateOrder(DEMO, "DemoOrderCreate");
-        Research.find("demoCliCode", CLI003);
-        Button.next();
-        Research.find("demoSupCode", LLED);
-        Button.next();
-        Button.next();
+        clickMenuProcess(DEMO, "DemoOrderCreate");
+        find("demoCliCode", CLI003);
+        Process.nextPage();
+        find("demoSupCode", LLED);
+        Process.nextPage();
+        Process.nextPage();
 
-        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Button.next();
+        setSliderValue("field_demoOrdQuantity", NUMBER);
+        Process.nextPage();
 
         String totalstr = Integer.toString(NUMBER * PRICE3);
         String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
                 .replaceAll("[,]", "")
                 .replaceAll("[.][0-9]*", "");
-        Button.save();
+        save();
 
         assertEquals(totalweb, totalstr);
     }
 
     @Test
     public void createOrderCli4() {
-        MenuInteraction.clickMenuCreateOrder(DEMO, "DemoOrderCreate");
-        Research.find("demoCliCode", CLI004);
-        Button.next();
-        Research.find("demoSupCode", PEAR);
-        Button.next();
-        Button.next();
+        clickMenuProcess(DEMO, "DemoOrderCreate");
+        find("demoCliCode", CLI004);
+        Process.nextPage();
+        find("demoSupCode", PEAR);
+        Process.nextPage();
+        Process.nextPage();
 
-        Modifier.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Button.next();
+        setSliderValue("field_demoOrdQuantity", NUMBER);
+        Process.nextPage();
 
-        Modifier.switchProcessingState("V");
-        Button.save();
+        switchProcessingState("V");
+        save();
 
-        assertTrue(Condition.verifyState("select2-field_demoOrdStatus-container", "Validated"));
+        assertTrue(verifyState("select2-field_demoOrdStatus-container", "Validated"));
     }
 }

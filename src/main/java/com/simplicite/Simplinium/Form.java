@@ -1,5 +1,6 @@
 package com.simplicite.Simplinium;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
@@ -8,8 +9,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
 
-
-public class Modifier {
+public class Form {
 
     /** Send a text to a component. Specific to the use of component which need to be click
      * before sending text then need to clear the text and have auto-completion in Simplicité.
@@ -37,11 +37,31 @@ public class Modifier {
         }
     }
 
-    /** Switch the processing state to a certain state.
+    /** Click the button close
      *
-     * @param state The state to switch
      */
-    public static void switchProcessingState(String state) {
-        Selenide.$("button[data-state=\"" + state + "\"]").click();
+    public static void close() {
+        $("button[data-action=\"close\"]").click();
     }
+
+    /** Click the button save
+     *
+     */
+    public static void save() {
+        $("button[data-action=\"save\"]").click();
+    }
+
+    /** Click the button save&close
+     *
+     */
+    public static void saveAndClose() {
+        $("button[data-action=\"saveclose\"]").click();
+    }
+
+    public static void clickOnButtonEndDlgmodal(String component) {
+        SelenideElement dlgmodal = $("#dlgmodal").shouldHave(Condition.cssClass("show"));
+        Selenide.sleep(1000);
+        dlgmodal.find(component).click();
+    }
+
 }

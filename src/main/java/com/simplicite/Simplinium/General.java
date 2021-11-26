@@ -9,7 +9,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class MenuInteraction {
+public class General {
 
     /** Click on a submenu in the main menu (left menu).
      *
@@ -34,7 +34,7 @@ public class MenuInteraction {
      *               (Value of data-domain in the web inspector)
      * @param name Name of the menu (Value of data-wkf in the web inspector)
      */
-    public static void clickMenuCreateOrder(String domain, String name) {
+    public static void clickMenuProcess(String domain, String name) {
         var domainelement = $("[data-domain=\"" + domain + "\"]");
 
         domainelement.scrollIntoView(false);
@@ -55,7 +55,7 @@ public class MenuInteraction {
         $("[data-domain=\"" + domain + "\"]").shouldBe(Condition.visible);
         SelenideElement element = $("[data-state=\"" + state + "\"]");
         if (!element.isDisplayed())
-            MenuInteraction.clickMenu(domain, name);
+            General.clickMenu(domain, name);
         element.click();
     }
 
@@ -96,4 +96,5 @@ public class MenuInteraction {
             default -> dropmenubutton.click();
         }
     }
+
 }

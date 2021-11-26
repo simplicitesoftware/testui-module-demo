@@ -5,7 +5,7 @@ import com.codeborne.selenide.Condition;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class Research {
+public class List {
 
     /** Search in the list of a business object, the object needed with a field
      *
