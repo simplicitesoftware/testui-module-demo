@@ -1,4 +1,4 @@
-package com.simplicite.utils;
+package com.simplicite.test;
 
 import java.util.Properties;
 

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.simplicite</groupId>
-    <artifactId>test</artifactId>
+    <artifactId>Demo2Dec</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>test</name>
+    <name>Demo2Dec</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,7 +22,7 @@
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
             <version>6.0.3</version>
-            <scope>test</scope>
+            <scope>test, compile</scope>
         </dependency>
         <!-- Use for the execution of test with JUnit 5 on Java for Selenide (Stable) -->
         <dependency>
@@ -44,6 +44,13 @@
             <version>1.7.32</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide-core</artifactId>
+            <version>6.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -51,11 +58,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
-                <configuration>
-                    <runOrder>alphabetical</runOrder>
-                    <!-- Broken on JUnit5 - waiting for resolution https://issues.apache.org/jira/browse/SUREFIRE-1698 -->
-                    <skipAfterFailureCount>1</skipAfterFailureCount>
-                </configuration>
             </plugin>
         </plugins>
     </build>
