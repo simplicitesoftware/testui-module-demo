@@ -40,17 +40,6 @@ public class SimpliciteTutorial1Test {
 
     }
 
-    @AfterAll
-    public static void setDownAll() {
-        try {
-            var out = new FileWriter("src/test/resources/config.properties");
-            PROPERTIES.store(out, null);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @BeforeEach
     public void setUp() {
         open(PROPERTIES.getProperty("url"));
@@ -58,12 +47,6 @@ public class SimpliciteTutorial1Test {
         if (SessionManagement.isAuthentificationPage()) {
             SessionManagement.connect(USERNAME, NEW_PASSWORD);
         }
-    }
-
-    @AfterEach
-    public void close() {
-        MenuInteraction.clickDropDownMenu(4);
-        SessionManagement.clearCache('u');
     }
 
     @Test
