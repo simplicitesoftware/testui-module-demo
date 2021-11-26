@@ -1,0 +1,10 @@
+# OS X / jenv
+.DS_Store
+.java-version
+
+# VS Code - Java
+.project
+.settings
+.classpath
+build
+target
