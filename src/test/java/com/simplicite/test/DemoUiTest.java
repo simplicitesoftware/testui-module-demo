@@ -2,28 +2,32 @@ package com.simplicite.test;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import com.simplicite.Simplinium.*;
 import com.simplicite.Simplinium.Process;
-
-import org.junit.jupiter.api.*;
+import com.simplicite.Simplinium.SessionManagement;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.simplicite.Simplinium.Form.*;
 import static com.simplicite.Simplinium.General.clickMenuProcess;
 import static com.simplicite.Simplinium.List.find;
-import static com.simplicite.test.DataStore.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({ScreenShooterExtension.class})
 public class DemoUiTest {
+
+    private final static Properties PROPERTIES = new Properties();
 
     @BeforeAll
     public static void setUpAll() {
@@ -41,8 +45,6 @@ public class DemoUiTest {
         Configuration.pageLoadTimeout = Integer.parseInt(PROPERTIES.getProperty("pageLoadTimeout"));
         Configuration.timeout = Integer.parseInt(PROPERTIES.getProperty("timeout"));
         Configuration.pollingInterval = Integer.parseInt(PROPERTIES.getProperty("pollingInterval"));
-        initUser();
-
     }
 
     @AfterAll
@@ -61,14 +63,17 @@ public class DemoUiTest {
         open(PROPERTIES.getProperty("url"));
 
         if (SessionManagement.isAuthentificationPage()) {
-            SessionManagement.connect(USERNAME, NEW_PASSWORD);
+            SessionManagement.connect(PROPERTIES.getProperty("name"), PROPERTIES.getProperty("password"));
         }
     }
 
     @Test
     public void createOrderCli1() {
-        clickMenuProcess(DEMO, "DemoOrderCreate");
-        find("demoCliCode", CLI001);
+        int NUMBER = 5;
+        int PRICE = 850;
+
+        clickMenuProcess("DemoDomain", "DemoOrderCreate");
+        find("demoCliCode", "CLI001");
         Process.nextPage();
         Process.nextPage();
         Process.nextPage();
@@ -86,17 +91,20 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli2() {
-        clickMenuProcess(DEMO, "DemoOrderCreate");
-        find("demoCliCode", CLI002);
+        int NUMBER = 5;
+        int PRICE = 582;
+
+        clickMenuProcess("DemoDomain", "DemoOrderCreate");
+        find("demoCliCode", "CLI002");
         Process.nextPage();
-        find("demoSupCode", DY);
+        find("demoSupCode", "DY");
         Process.nextPage();
         Process.nextPage();
 
         setSliderValue("field_demoOrdQuantity", NUMBER);
         Process.nextPage();
 
-        String totalstr = Integer.toString(NUMBER * PRICE2);
+        String totalstr = Integer.toString(NUMBER * PRICE);
         String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
                 .replaceAll("[,]", "")
                 .replaceAll("[.][0-9]*", "");
@@ -106,17 +114,20 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli3() {
-        clickMenuProcess(DEMO, "DemoOrderCreate");
-        find("demoCliCode", CLI003);
+        int NUMBER = 5;
+        int PRICE = 550;
+
+        clickMenuProcess("DemoDomain", "DemoOrderCreate");
+        find("demoCliCode", "CLI003");
         Process.nextPage();
-        find("demoSupCode", LLED);
+        find("demoSupCode", "LLED");
         Process.nextPage();
         Process.nextPage();
 
         setSliderValue("field_demoOrdQuantity", NUMBER);
         Process.nextPage();
 
-        String totalstr = Integer.toString(NUMBER * PRICE3);
+        String totalstr = Integer.toString(NUMBER * PRICE);
         String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
                 .replaceAll("[,]", "")
                 .replaceAll("[.][0-9]*", "");
@@ -127,14 +138,17 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli4() {
-        clickMenuProcess(DEMO, "DemoOrderCreate");
-        find("demoCliCode", CLI004);
+        int NUMBER = 5;
+        int PRICE = 497;
+
+        clickMenuProcess("DemoDomain", "DemoOrderCreate");
+        find("demoCliCode", "CLI004");
         Process.nextPage();
-        find("demoSupCode", PEAR);
+        find("demoSupCode", "PEAR");
         Process.nextPage();
         Process.nextPage();
 
-        setSliderValue("field_demoOrdQuantity", NUMBER);
+        setSliderValue("field_demoOrdQuantity", PRICE);
         Process.nextPage();
 
         switchProcessingState("V");
