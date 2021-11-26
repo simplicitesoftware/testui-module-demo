@@ -18,7 +18,6 @@ import static com.codeborne.selenide.Selenide.open;
 import static com.simplicite.Simplinium.Form.*;
 import static com.simplicite.Simplinium.General.clickMenuProcess;
 import static com.simplicite.Simplinium.List.find;
-import static com.simplicite.Simplinium.Process.switchProcessingState;
 import static com.simplicite.test.DataStore.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

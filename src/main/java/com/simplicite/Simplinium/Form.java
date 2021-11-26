@@ -85,4 +85,19 @@ public class Form {
         $("button[data-action=\"crosstab_"+ name + "\"]").click();
         $("#work").find(".crosstab").should(com.codeborne.selenide.Condition.exist);
     }
+
+    /** Click the button create
+     *
+     */
+    public static void create() {
+        $("button[data-action=\"create\"]").click();
+    }
+
+    /** Switch the processing state to a certain state.
+     *
+     * @param state The state to switch
+     */
+    public static void switchProcessingState(String state) {
+        Selenide.$("button[data-state=\"" + state + "\"]").click();
+    }
 }
