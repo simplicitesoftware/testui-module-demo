@@ -1,4 +1,4 @@
-package com.simplicite.Simplinium;
+package io.simplicite.Simplinium;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
@@ -11,11 +11,12 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class General {
 
-    /** Click on a submenu in the main menu (left menu).
+    /**
+     * Click on a submenu in the main menu (left menu).
      *
      * @param domain Name of the domain which contains the menu
      *               (Value of data-domain in the web inspector)
-     * @param name Name of the menu (Value of data-obj in the web inspector)
+     * @param name   Name of the menu (Value of data-obj in the web inspector)
      */
 
     public static void clickMenu(String domain, String name) {
@@ -23,33 +24,39 @@ public class General {
 
         domainelement.scrollIntoView(false);
         SelenideElement element = $("[data-obj=\"" + name + "\"]");
-        while (!element.isDisplayed())
+        while (!element.isDisplayed()) {
             domainelement.click();
+            Selenide.sleep(1000);
+        }
         element.click();
     }
 
-    /** Click on a process submenu in the main menu (left menu).
+    /**
+     * Click on a process submenu in the main menu (left menu).
      *
      * @param domain Name of the domain which contains the menu
      *               (Value of data-domain in the web inspector)
-     * @param name Name of the menu (Value of data-wkf in the web inspector)
+     * @param name   Name of the menu (Value of data-wkf in the web inspector)
      */
     public static void clickMenuProcess(String domain, String name) {
         var domainelement = $("[data-domain=\"" + domain + "\"]");
 
         domainelement.scrollIntoView(false);
         SelenideElement element = $("[data-wkf=\"" + name + "\"]");
-        while (!element.isDisplayed())
+        while (!element.isDisplayed()) {
             domainelement.click();
+            Selenide.sleep(1000);
+        }
         element.click();
     }
 
-    /** Click on a state in a submenu in the main menu (left menu).
+    /**
+     * Click on a state in a submenu in the main menu (left menu).
      *
      * @param domain Name of the domain which contains the menu
      *               (Value of data-domain in the web inspector)
-     * @param name Name of the menu (Value of data-obj in the web inspector)
-     * @param state Name of the state needed to be clicked
+     * @param name   Name of the menu (Value of data-obj in the web inspector)
+     * @param state  Name of the state needed to be clicked
      */
     public static void clickMenuState(String domain, String name, String state) {
         $("[data-domain=\"" + domain + "\"]").shouldBe(Condition.visible);
@@ -59,7 +66,8 @@ public class General {
         element.click();
     }
 
-    /** Click on the dropmenu (on the right).
+    /**
+     * Click on the dropmenu (on the right).
      *
      * @param type 0 -> SocialPosts
      *             1 -> Feedback

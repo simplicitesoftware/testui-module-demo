@@ -1,4 +1,4 @@
-package com.simplicite.Simplinium;
+package io.simplicite.Simplinium;
 
 import com.codeborne.selenide.Selenide;
 
