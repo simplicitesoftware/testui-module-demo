@@ -73,7 +73,7 @@ public class DemoUiTest {
         Form.switchProcessingState("V");
         Form.save();
 
-        Assertions.assertTrue(Form.verifyState("select2-field_demoOrdStatus-container", "Validated"));
+        Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
     }
 
     private void createOrderThroughProcess(String cliCode, String supCode, int quantity, int expectedPrice){
