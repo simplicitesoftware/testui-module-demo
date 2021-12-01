@@ -3,18 +3,17 @@ package com.simplicite.test;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import io.simplicite.Simplinium.*;
 import io.simplicite.Simplinium.Process;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import io.simplicite.Simplinium.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.logging.*;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -39,17 +38,44 @@ public class DemoUiTest {
         Configuration.pageLoadTimeout = Integer.parseInt(PROPERTIES.getProperty("pageLoadTimeout"));
         Configuration.timeout = Integer.parseInt(PROPERTIES.getProperty("timeout"));
         Configuration.pollingInterval = Integer.parseInt(PROPERTIES.getProperty("pollingInterval"));
+        Configuration.webdriverLogsEnabled = true;
+        //System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.BROWSER, Level.ALL);
+        logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+
+        Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
+        Selenide.open(PROPERTIES.getProperty("url"));
     }
 
+    @AfterAll
+    public static void  close() {
+        var log = Selenide.getWebDriverLogs(LogType.DRIVER, Level.ALL);
+        System.out.println("Driver");
+
+        for (var a : log) {
+            System.out.println(a);
+        }
+        System.out.println("Performance");
+
+        log = Selenide.getWebDriverLogs(LogType.PERFORMANCE, Level.ALL);
+        for (var a : log) {
+            System.out.println(a);
+        }
+        System.out.println("Browser");
+
+        for(String logEntry : Selenide.getWebDriverLogs(LogType.BROWSER, Level.ALL)) {
+            System.out.println(logEntry);
+        }
+    }
 
     @BeforeEach
     public void setUp() {
-        Selenide.open(PROPERTIES.getProperty("url"));
-
         if (SessionManagement.isAuthentificationPage()) {
             SessionManagement.connect(PROPERTIES.getProperty("name"), PROPERTIES.getProperty("password"));
         }
     }
+
 
     @Test
     public void createOrderCli1() {

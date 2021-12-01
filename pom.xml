@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>6.0.3</version>
+            <version>6.1.1</version>
             <scope>compile</scope>
         </dependency>
         <!-- Use for the execution of test with JUnit 5 on Java for Selenide (Stable) -->
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide-core</artifactId>
-            <version>6.0.3</version>
+            <version>6.1.1</version>
             <scope>compile</scope>
         </dependency>
 
