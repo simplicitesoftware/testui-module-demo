@@ -7,10 +7,18 @@ import io.simplicite.Simplinium.Process;
 import io.simplicite.Simplinium.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.logging.*;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 
+import java.io.BufferedOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -38,35 +46,28 @@ public class DemoUiTest {
         Configuration.pageLoadTimeout = Integer.parseInt(PROPERTIES.getProperty("pageLoadTimeout"));
         Configuration.timeout = Integer.parseInt(PROPERTIES.getProperty("timeout"));
         Configuration.pollingInterval = Integer.parseInt(PROPERTIES.getProperty("pollingInterval"));
-        Configuration.webdriverLogsEnabled = true;
-        //System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
+
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.BROWSER, Level.ALL);
-        logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
-
         Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
         Selenide.open(PROPERTIES.getProperty("url"));
     }
 
     @AfterAll
-    public static void  close() {
-        var log = Selenide.getWebDriverLogs(LogType.DRIVER, Level.ALL);
-        System.out.println("Driver");
+    public static void close() {
+        Path p = Paths.get("./build/reports/tests/com/browser.log");
 
-        for (var a : log) {
-            System.out.println(a);
-        }
-        System.out.println("Performance");
+        try (OutputStream out = new BufferedOutputStream(
+                Files.newOutputStream(p, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING))) {
+            for (String logEntry : Selenide.getWebDriverLogs(LogType.BROWSER, Level.ALL)) {
 
-        log = Selenide.getWebDriverLogs(LogType.PERFORMANCE, Level.ALL);
-        for (var a : log) {
-            System.out.println(a);
+                var data = (logEntry + "\n").getBytes(StandardCharsets.UTF_8);
+                out.write(data, 0, data.length);
+            }
+        } catch (IOException x) {
+            System.err.println(x.getMessage());
         }
-        System.out.println("Browser");
 
-        for(String logEntry : Selenide.getWebDriverLogs(LogType.BROWSER, Level.ALL)) {
-            System.out.println(logEntry);
-        }
     }
 
     @BeforeEach
@@ -102,7 +103,7 @@ public class DemoUiTest {
         Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
     }
 
-    private void createOrderThroughProcess(String cliCode, String supCode, int quantity, int expectedPrice){
+    private void createOrderThroughProcess(String cliCode, String supCode, int quantity, int expectedPrice) {
         General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
 
         // Select client
