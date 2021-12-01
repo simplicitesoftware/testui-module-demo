@@ -64,7 +64,7 @@ public class DemoUiTest {
                 var data = (logEntry + "\n").getBytes(StandardCharsets.UTF_8);
                 out.write(data, 0, data.length);
             }
-            System.out.println("[DEMO] Browser log created:"+ System.getProperty("user.dir") + "/build/reports/tests/com/browser.log");
+            System.out.println("[DEMO] Browser log created: "+ System.getProperty("user.dir") + "/build/reports/tests/com/browser.log");
         } catch (IOException x) {
             System.err.println(x.getMessage());
         }
@@ -99,6 +99,8 @@ public class DemoUiTest {
 
         Form.switchProcessingState("V");
         Form.save();
+
+        //Wait asynchronous task to add a class on select
         Selenide.sleep(1000);
         Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
     }
