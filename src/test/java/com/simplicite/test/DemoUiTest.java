@@ -79,89 +79,52 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli1() {
-        int NUMBER = 5;
-        int PRICE = 850;
-
-        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
-        List.find("demoCliCode", "CLI001");
-        Process.nextPage();
-        Process.nextPage();
-        Process.nextPage();
-
-        Form.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Process.nextPage();
-
-        String totalstr = Integer.toString(NUMBER * PRICE);
-        String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
-                .replaceAll("[,]", "")
-                .replaceAll("[.][0-9]*", "");
-        Assertions.assertEquals(totalweb, totalstr);
-        Form.save();
+        createOrderThroughProcess("CLI001", "BIM", 5, 850);
     }
 
     @Test
     public void createOrderCli2() {
-        int NUMBER = 5;
-        int PRICE = 582;
-
-        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
-        List.find("demoCliCode", "CLI002");
-        Process.nextPage();
-        List.find("demoSupCode", "DY");
-        Process.nextPage();
-        Process.nextPage();
-
-        Form.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Process.nextPage();
-
-        String totalstr = Integer.toString(NUMBER * PRICE);
-        String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
-                .replaceAll("[,]", "")
-                .replaceAll("[.][0-9]*", "");
-        Assertions.assertEquals(totalweb, totalstr);
-        Form.save();
+        createOrderThroughProcess("CLI002", "DY", 5, 582);
     }
 
     @Test
     public void createOrderCli3() {
-        int NUMBER = 5;
-        int PRICE = 550;
-
-        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
-        List.find("demoCliCode", "CLI003");
-        Process.nextPage();
-        List.find("demoSupCode", "LLED");
-        Process.nextPage();
-        Process.nextPage();
-
-        Form.setSliderValue("field_demoOrdQuantity", NUMBER);
-        Process.nextPage();
-
-        String totalstr = Integer.toString(NUMBER * PRICE);
-        String totalweb = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
-                .replaceAll("[,]", "")
-                .replaceAll("[.][0-9]*", "");
-        Form.save();
-
-        Assertions.assertEquals(totalweb, totalstr);
+        createOrderThroughProcess("CLI003", "LLED", 5, 550);
     }
 
     @Test
     public void createOrderCli4() {
-
-        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
-        List.find("demoCliCode", "CLI004");
-        Process.nextPage();
-        List.find("demoSupCode", "PEAR");
-        Process.nextPage();
-        Process.nextPage();
-
-        Form.setSliderValue("field_demoOrdQuantity", 5);
-        Process.nextPage();
+        createOrderThroughProcess("CLI004", "PEAR", 5, 497);
 
         Form.switchProcessingState("V");
         Form.save();
 
-        Assertions.assertTrue(Form.verifyState("select2-field_demoOrdStatus-container", "Validated"));
+        Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
+    }
+
+    private void createOrderThroughProcess(String cliCode, String supCode, int quantity, int expectedPrice){
+        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
+
+        // Select client
+        List.find("demoCliCode", cliCode);
+        Process.nextPage();
+
+        // Select Supplier
+        List.find("demoSupCode", supCode);
+        Process.nextPage();
+
+        // Select product (first one by default)
+        Process.nextPage();
+
+        // Select quantity
+        Form.setSliderValue("field_demoOrdQuantity", quantity);
+        Process.nextPage();
+
+        String expectedTotal = Integer.toString(quantity * expectedPrice);
+        String foundTotal = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
+                .replaceAll("[,]", "")
+                .replaceAll("[.][0-9]*", "");
+        Assertions.assertEquals(expectedTotal, foundTotal);
+        Form.save();
     }
 }
