@@ -29,7 +29,6 @@ import static com.codeborne.selenide.Selenide.$;
 public class DemoUiTest {
 
     private final static Properties PROPERTIES = new Properties();
-
     @BeforeAll
     public static void setUpAll() {
         try {
@@ -50,6 +49,7 @@ public class DemoUiTest {
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
+
         Selenide.open(PROPERTIES.getProperty("url"));
     }
 
@@ -64,10 +64,10 @@ public class DemoUiTest {
                 var data = (logEntry + "\n").getBytes(StandardCharsets.UTF_8);
                 out.write(data, 0, data.length);
             }
+            System.out.println("[DEMO] Browser log created:"+ System.getProperty("user.dir") + "/build/reports/tests/com/browser.log");
         } catch (IOException x) {
             System.err.println(x.getMessage());
         }
-
     }
 
     @BeforeEach
@@ -85,21 +85,21 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli2() {
-        createOrderThroughProcess("CLI002", "DY", 5, 582);
+        createOrderThroughProcess("CLI002", "DY", 7, 582);
     }
 
     @Test
     public void createOrderCli3() {
-        createOrderThroughProcess("CLI003", "LLED", 5, 550);
+        createOrderThroughProcess("CLI003", "LLED", 2, 550);
     }
 
     @Test
     public void createOrderCli4() {
-        createOrderThroughProcess("CLI004", "PEAR", 5, 497);
+        createOrderThroughProcess("CLI004", "PEAR", 8, 497);
 
         Form.switchProcessingState("V");
         Form.save();
-
+        Selenide.sleep(1000);
         Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
     }
 

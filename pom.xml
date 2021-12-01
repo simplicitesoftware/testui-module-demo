@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.simplicite.Simplinium.Demo2Dec</groupId>
+    <groupId>io.simplicite.Simplinium</groupId>
     <artifactId>Demo2Dec</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>Demo2Dec</name>
 
     <properties>
@@ -50,7 +50,6 @@
             <version>6.1.1</version>
             <scope>compile</scope>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
