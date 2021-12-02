@@ -8,6 +8,7 @@ import org.openqa.selenium.Keys;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class Form {
 
@@ -49,6 +50,7 @@ public class Form {
      */
     public static void save() {
         $("button[data-action=\"save\"]").click();
+        $(".alert").should(Condition.and("saverule", Condition.exist,Condition.text("Save OK.")));
     }
 
     /** Click the button save&close

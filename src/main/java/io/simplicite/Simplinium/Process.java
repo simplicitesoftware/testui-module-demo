@@ -12,7 +12,7 @@ public class Process {
     public static void nextPage() {
         $("button[data-action=\"validate\"]").click();
         //depends of the performance can be remove
-        Selenide.sleep(200);
+        Selenide.sleep(500);
     }
 
 
