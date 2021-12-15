@@ -1,82 +1,34 @@
 package com.simplicite.test;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import io.simplicite.Simplinium.Process;
+import com.codeborne.selenide.Selenide;
 import io.simplicite.Simplinium.*;
+import io.simplicite.Simplinium.Process;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
-
-import java.io.BufferedOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.logging.Level;
-
 import static com.codeborne.selenide.Selenide.$;
+
+import java.util.Objects;
 
 @ExtendWith({ScreenShooterExtension.class})
 public class DemoUiTest {
 
-    private final static Properties PROPERTIES = new Properties();
-
     @BeforeAll
     public static void setUpAll() {
-        try {
-            var in = new FileReader("src/test/resources/config.properties");
-            PROPERTIES.load(in);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Configuration.browserSize = PROPERTIES.getProperty("browsersize");
-        Configuration.browser = PROPERTIES.getProperty("browser");
-        Configuration.headless = PROPERTIES.getProperty("headless").equals("true");
-        Configuration.savePageSource = false;
-        Configuration.pageLoadTimeout = Integer.parseInt(PROPERTIES.getProperty("pageLoadTimeout"));
-        Configuration.timeout = Integer.parseInt(PROPERTIES.getProperty("timeout"));
-        Configuration.pollingInterval = Integer.parseInt(PROPERTIES.getProperty("pollingInterval"));
-
-        LoggingPreferences logPrefs = new LoggingPreferences();
-        logPrefs.enable(LogType.BROWSER, Level.ALL);
-        Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
-        Selenide.open(PROPERTIES.getProperty("url"));
-    }
-
-    @AfterAll
-    public static void close() {
-        Path p = Paths.get("./build/reports/tests/com/browser.log");
-
-        try (OutputStream out = new BufferedOutputStream(
-                Files.newOutputStream(p, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING))) {
-            for (String logEntry : Selenide.getWebDriverLogs(LogType.BROWSER, Level.ALL)) {
-
-                var data = (logEntry + "\n").getBytes(StandardCharsets.UTF_8);
-                out.write(data, 0, data.length);
-            }
-        } catch (IOException x) {
-            System.err.println(x.getMessage());
-        }
-
+        Config.init();
+        Selenide.open(Config.url);
     }
 
     @BeforeEach
     public void setUp() {
-        if (SessionManagement.isAuthentificationPage()) {
-            SessionManagement.connect(PROPERTIES.getProperty("name"), PROPERTIES.getProperty("password"));
-        }
+        if (SessionManagement.isAuthentificationPage())
+            SessionManagement.connect(Config.user, Config.password);
     }
 
+    @AfterAll
+    public static void close() {
+        Config.saveBrowserLogs();
+    }
 
     @Test
     public void createOrderCli1() {
