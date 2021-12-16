@@ -1,10 +1,11 @@
 package com.simplicite.test;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.*;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import io.simplicite.Simplinium.Process;
-import io.simplicite.Simplinium.*;
+import io.simplicite.Simplinium.Form;
+import io.simplicite.Simplinium.General;
+import io.simplicite.Simplinium.List;
+import io.simplicite.Simplinium.SessionManagement;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.logging.LogType;
@@ -19,16 +20,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 @ExtendWith({ScreenShooterExtension.class})
 public class DemoUiTest {
 
     private final static Properties PROPERTIES = new Properties();
+
     @BeforeAll
     public static void setUpAll() {
         try {
@@ -64,7 +66,7 @@ public class DemoUiTest {
                 var data = (logEntry + "\n").getBytes(StandardCharsets.UTF_8);
                 out.write(data, 0, data.length);
             }
-            System.out.println("[DEMO] Browser log created: "+ System.getProperty("user.dir") + "/build/reports/tests/com/browser.log");
+            System.out.println("[DEMO] Browser log created: " + System.getProperty("user.dir") + "/build/reports/tests/com/browser.log");
         } catch (IOException x) {
             System.err.println(x.getMessage());
         }
@@ -79,55 +81,83 @@ public class DemoUiTest {
 
 
     @Test
-    public void createOrderCli1() {
-        createOrderThroughProcess("CLI001", "BIM", 5, 850);
-    }
+    public void triColonne() {
+        General.clickMenu(Datastore.DOMAIN, Datastore.BOBJECT1);
 
-    @Test
-    public void createOrderCli2() {
-        createOrderThroughProcess("CLI002", "DY", 7, 582);
-    }
-
-    @Test
-    public void createOrderCli3() {
-        createOrderThroughProcess("CLI003", "LLED", 2, 550);
-    }
-
-    @Test
-    public void createOrderCli4() {
-        createOrderThroughProcess("CLI004", "PEAR", 8, 497);
-
-        Form.switchProcessingState("V");
-        Form.save();
-
-        //Wait asynchronous task to add a class on select
+        $("button[data-action=\"search\"]").click();
         Selenide.sleep(1000);
-        Assertions.assertEquals("V", $("#field_demoOrdStatus").getSelectedOption().getValue());
+        SelenideElement dlgmodal = $("#dlgmodal_search");
+        dlgmodal.find("#demoSupCode").setValue("*");
+        dlgmodal.find("button[data-action=\"search\"]").click();
+        dlgmodal.find("button[data-action=\"close\"]").click();
+
+        $$("[data-field=\"demoSupCode\"]").forEach(e -> Assertions.assertEquals(e.getText(), "BIM"));
+        //cas simple sans form controle
+        //cas complexe form controle uniformisation ou bete et méchant
     }
 
-    private void createOrderThroughProcess(String cliCode, String supCode, int quantity, int expectedPrice) {
-        General.clickMenuProcess("DemoDomain", "DemoOrderCreate");
+    @Test
+    public void createOnList() {
+        General.clickMenu("AlcDomain", "AlcSupplier");
+        $("button[data-action=\"addlist\"]").click();
+        SelenideElement area = $("[data-target-id=\"0\"]");
+        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST");
+        area.find("[data-field=\"alcSupNom\"]").find("input").setValue("TESTI");
+        area.find("[data-field=\"alcSupTelephone\"]").find("input").setValue("065874956");
+        area.find("[data-field=\"alcSupSite\"]").find("input").setValue("http://localhost/ui").pressEnter();
+        //  or save
+        Form.close();
+    }
 
-        // Select client
-        List.find("demoCliCode", cliCode);
-        Process.nextPage();
+    @Test
+    public void deleteOnList() {
+        General.clickMenu("AlcDomain", "AlcSupplier");
 
-        // Select Supplier
-        List.find("demoSupCode", supCode);
-        Process.nextPage();
+        //edit
+        $("button[data-action=\"listedit\"]").click();
+        SelenideElement area = $("[data-target-id=\"4\"]");
+        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST2");
+        List.save();
 
-        // Select product (first one by default)
-        Process.nextPage();
+        // delete
+        area.find(".actions").find("[type=\"checkbox\"]").click();
+        $("#work").find(".head").find(".dropdown").click();
+        $("#work").find(".head").find("[data-action=\"delall\"]").click();
+        $("#dlgmodal").find("[data-action=\"OK\"]").shouldBe(Condition.visible).click();
+    }
 
-        // Select quantity
-        Form.setSliderValue("field_demoOrdQuantity", quantity);
-        Process.nextPage();
+    @Test
+    public void preferenceOnList() {
+        General.clickMenu("AlcDomain", "AlcSupplier");
 
-        String expectedTotal = Integer.toString(quantity * expectedPrice);
-        String foundTotal = Objects.requireNonNull($("#field_demoOrdTotal").getValue())
-                .replaceAll("[,]", "")
-                .replaceAll("[.][0-9]*", "");
-        Assertions.assertEquals(expectedTotal, foundTotal);
-        Form.save();
+        $("#work").find(".head").find(".dropdown").click();
+        $("#work").find(".head").find("[data-action=\"prefs\"]").click();
+        SelenideElement dlg = $("#dlgmodal_prefs");
+        dlg.find("[data-tab=\"2\"]").shouldHave(Condition.text("Action")).click();
+        SelenideElement actionhide = dlg.find("#actionhid");
+        SelenideElement actionvis = dlg.find("#actionvis");
+        actionhide.find("[value=\"reload\"]").click();
+
+        // 0 right arrow 1 left arrow 2 up arrow 3 down arrow
+        ElementsCollection a = dlg.findAll("img.button").filter(Condition.visible);
+        a.get(1).click();
+        dlg.findAll("button").findBy(Condition.text("Save")).click();
+    }
+
+    @Test
+    public void viewOnList() {
+        General.clickMenu("AlcDomain", "AlcSupplier");
+
+        $("#work").find(".btn-minifiable").click();
+    }
+
+    @Test
+    public void paginationOnList() {
+        General.clickMenu("AlcDomain", "AlcSupplier");
+
+        System.out.println($("#work").find(".card-footer").find(".list-count").getText());
+        System.out.println($("#work").find(".card-footer").find(".list-pages").getText());
+        System.out.println($("#work").find(".card-footer").find(".page-item").getText());
+        System.out.println($("#work").find(".card-footer").find(".list-rows").find("select").getSelectedOption().getValue());
     }
 }

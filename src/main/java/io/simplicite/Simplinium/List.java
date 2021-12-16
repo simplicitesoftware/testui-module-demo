@@ -25,4 +25,7 @@ public class List {
         $("#" + component).setValue(value).pressEnter();
     }
 
+    public static void save() {
+            $("button[data-action=\"save\"]").click();
+    }
 }

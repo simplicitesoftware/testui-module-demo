@@ -105,4 +105,8 @@ public class General {
         }
     }
 
+    public static void save() {
+        $("button[data-action=\"save\"]").click();
+    }
+
 }
