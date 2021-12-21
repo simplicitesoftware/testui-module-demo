@@ -4,8 +4,7 @@ import java.util.Properties;
 
 public class Datastore {
 
-    public final static String DOMAIN = "DemoDomain";
-    public final static String BOBJECT1 = "DemoSupplier";
+    public final static String DOMAIN = "AlcDomain";
 
     public static Properties PROPERTIES = new Properties();
 

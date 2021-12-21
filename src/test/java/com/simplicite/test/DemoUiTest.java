@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -82,18 +83,55 @@ public class DemoUiTest {
 
     @Test
     public void triColonne() {
-        General.clickMenu(Datastore.DOMAIN, Datastore.BOBJECT1);
+        General.clickMenu(Datastore.DOMAIN, Datastore.SUPPLIER);
 
         $("button[data-action=\"search\"]").click();
         Selenide.sleep(1000);
         SelenideElement dlgmodal = $("#dlgmodal_search");
-        dlgmodal.find("#demoSupCode").setValue("*");
+        dlgmodal.find("#alcSupCode").setValue("BIM");
         dlgmodal.find("button[data-action=\"search\"]").click();
         dlgmodal.find("button[data-action=\"close\"]").click();
 
-        $$("[data-field=\"demoSupCode\"]").forEach(e -> Assertions.assertEquals(e.getText(), "BIM"));
+        $$("[data-field=\"alcSupCode\"]").forEach(e -> Assertions.assertEquals(e.getText(), "BIM"));
         //cas simple sans form controle
         //cas complexe form controle uniformisation ou bete et méchant
+    }
+
+    @Test
+    public void pingToColonne() {
+        General.clickMenu(Datastore.DOMAIN, Datastore.SUPPLIER);
+
+        $("button[data-action=\"search\"]").click();
+        Selenide.sleep(1000);
+        SelenideElement dlgmodal = $("#dlgmodal_search");
+        dlgmodal.find("button[data-action=\"pincol\"]").click();
+
+        $("#alcSupCode").setValue("BIM").pressEnter();
+
+        $$("[data-field=\"alcSupCode\"]").forEach(e -> Assertions.assertEquals(e.getText(), "BIM"));
+
+
+        $("#work").find("[data-action=\"pincol\"]").click();
+        $("#work").find("[data-action=\"undock\"]").click();
+        dlgmodal.find("button[data-action=\"close\"]").click();
+
+    }
+    @Test
+    public void dockTheSearch() {
+        General.clickMenu(Datastore.DOMAIN, Datastore.SUPPLIER);
+
+        $("button[data-action=\"search\"]").click();
+        Selenide.sleep(1000);
+        SelenideElement dlgmodal = $("#dlgmodal_search");
+        dlgmodal.find("button[data-action=\"dock\"]").click();
+
+        $("#alcSupCode").setValue("BIM").pressEnter();
+        // or         $("#work").find("[data-action=\"search\"]").click();
+
+        $$("[data-field=\"alcSupCode\"]").forEach(e -> Assertions.assertEquals(e.getText(), "BIM"));
+
+        $("#work").find("[data-action=\"undock\"]").click();
+        dlgmodal.find("button[data-action=\"close\"]").click();
     }
 
     @Test
@@ -101,12 +139,12 @@ public class DemoUiTest {
         General.clickMenu("AlcDomain", "AlcSupplier");
         $("button[data-action=\"addlist\"]").click();
         SelenideElement area = $("[data-target-id=\"0\"]");
-        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST");
-        area.find("[data-field=\"alcSupNom\"]").find("input").setValue("TESTI");
+        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST2");
+        area.find("[data-field=\"alcSupNom\"]").find("input").setValue("TESTI2");
         area.find("[data-field=\"alcSupTelephone\"]").find("input").setValue("065874956");
         area.find("[data-field=\"alcSupSite\"]").find("input").setValue("http://localhost/ui").pressEnter();
         //  or save
-        Form.close();
+        $("button[data-action]").click();
     }
 
     @Test
@@ -115,8 +153,13 @@ public class DemoUiTest {
 
         //edit
         $("button[data-action=\"listedit\"]").click();
-        SelenideElement area = $("[data-target-id=\"4\"]");
-        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST2");
+        Selenide.sleep(1000);
+        SelenideElement area = $("[id*=\"alcSupCode\"][value=\"TEST2\"]").ancestor("[data-target=AlcSupplier]");
+
+        area.find("[data-group=\"alcSupCode\"]").setValue("TEST3");
+        //SelenideElement area = $("[data-target-id=\"4\"]");
+
+        area.find("[data-field=\"alcSupCode\"]").find("input").setValue("TEST3");
         List.save();
 
         // delete
@@ -159,5 +202,51 @@ public class DemoUiTest {
         System.out.println($("#work").find(".card-footer").find(".list-pages").getText());
         System.out.println($("#work").find(".card-footer").find(".page-item").getText());
         System.out.println($("#work").find(".card-footer").find(".list-rows").find("select").getSelectedOption().getValue());
+    }
+
+    @Test
+    public void attributSimpleText() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+
+        Random rand = new Random();
+        StringBuilder str= new StringBuilder();
+        for(int i = 0 ; i < 20 ; i++){
+            char c = (char)(rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
+            str.append(c);
+        }
+        $("#field_ftAttrShortText").setValue(str.toString());
+        Form.save();
+        Assertions.assertEquals($("#field_ftAttrShortText").getValue(), str.toString());
+    }
+
+    @Test
+    public void AttributSimpleTextMax() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+
+        Random rand = new Random();
+        StringBuilder str= new StringBuilder();
+        for(int i = 0 ; i < 255 ; i++){
+            char c = (char)(rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
+            str.append(c);
+        }
+        $("#field_ftAttrShortText").setValue(str.toString());
+        Form.save();
+        Assertions.assertEquals($("#field_ftAttrShortText").getValue(), str.toString());
+    }
+
+    @Test
+    public void AttributLongText() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+
+        Form.setRandomText(20, "#field_ftAttrShortText");
+        String str = Form.setRandomText(500, "#field_ftAttrLongText");
+        Form.save();
+        Assertions.assertEquals($("#field_ftAttrLongText").getValue(), str);
     }
 }
