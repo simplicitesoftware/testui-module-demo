@@ -8,9 +8,13 @@ import io.simplicite.Simplinium.List;
 import io.simplicite.Simplinium.SessionManagement;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,8 +28,9 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selectors.byName;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.*;
 
 @ExtendWith({ScreenShooterExtension.class})
 public class DemoUiTest {
@@ -116,6 +121,7 @@ public class DemoUiTest {
         dlgmodal.find("button[data-action=\"close\"]").click();
 
     }
+
     @Test
     public void dockTheSearch() {
         General.clickMenu(Datastore.DOMAIN, Datastore.SUPPLIER);
@@ -211,9 +217,9 @@ public class DemoUiTest {
         Form.create();
 
         Random rand = new Random();
-        StringBuilder str= new StringBuilder();
-        for(int i = 0 ; i < 20 ; i++){
-            char c = (char)(rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < 20; i++) {
+            char c = (char) (rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
             str.append(c);
         }
         $("#field_ftAttrShortText").setValue(str.toString());
@@ -228,9 +234,9 @@ public class DemoUiTest {
         Form.create();
 
         Random rand = new Random();
-        StringBuilder str= new StringBuilder();
-        for(int i = 0 ; i < 255 ; i++){
-            char c = (char)(rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < 255; i++) {
+            char c = (char) (rand.nextInt(93) + 33 /*+ 65 + 32 * rand.nextInt(2)*/);
             str.append(c);
         }
         $("#field_ftAttrShortText").setValue(str.toString());
@@ -249,4 +255,118 @@ public class DemoUiTest {
         Form.save();
         Assertions.assertEquals($("#field_ftAttrLongText").getValue(), str);
     }
+
+    @Test
+    public void AttributHtml() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+        $("#field_ftAttrShortText").setValue("htmlTest19");
+        $("[data-field=\"ftAttrHtml\"]").find(byText("Insert")).click();
+        $("[title=\"Image...\"]").click();
+        SelenideElement url = $(".tox-textfield[type=\"url\"]");
+        SelenideElement text = $(".tox-textfield[type=\"text\"]");
+        actions().moveToElement(url).click().sendKeys("https://docs.simplicite.io/logos/logo250.png").click(text).perform();
+        $("button.tox-button[title=\"Save\"]").click();
+        $("[data-field=\"ftAttrHtml\"]").find(byText("Tools")).click();
+        $("[title=\"Source code\"]").click();
+
+        SelenideElement element = $(".tox-textarea");
+        actions().moveToElement(element).click().keyDown(Keys.CONTROL).sendKeys("A").sendKeys("C").keyUp(Keys.CONTROL).perform();
+
+        try {
+            String myText = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            Assertions.assertEquals("<p><img src=\"https://docs.simplicite.io/logos/logo250.png\" alt=\"\" width=\"250\" height=\"50\" /></p>", myText);
+        } catch (UnsupportedFlavorException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void AttributLongtextMarkdown() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+        $("#field_ftAttrShortText").setValue("htmlTest3");
+        $("[data-field=\"ftAttrLongTextMarkdown\"]").find("[data-action=\"mdedit_field_ftAttrLongTextMarkdown\"]").click();
+        SelenideElement modal = $("#dlgmodal_mdedit");
+        modal.find(".ace_text-input").setValue("# Lorem ipsum");
+        modal.find("[data-action=\"apply\"]").click();
+        Form.save();
+        Assertions.assertEquals("<h1 id=\"lorem-ipsum\">Lorem ipsum</h1>",
+                $("[data-field=\"ftAttrLongTextMarkdown\"]").find(".markdown-html").innerHtml());
+
+    }
+
+    public static void ChechNumber(String id, String value, String expected) {
+        SelenideElement num = $("#" + id);
+        num.setValue(value).pressEnter();
+        actions().moveToElement(num).click().keyDown(Keys.CONTROL).sendKeys("A").sendKeys("C").keyUp(Keys.CONTROL).perform();
+
+        try {
+            String myText = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            Assertions.assertEquals(expected, myText);
+        } catch (UnsupportedFlavorException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void CheckPourcentageBar(String id, String idprogressbar, String value, String expected) {
+        SelenideElement prctage = $("#" + id);
+        prctage.setValue(value);
+        Assertions.assertEquals(expected, $("#" + idprogressbar).find(".progress-bar").getText());
+
+    }
+
+    @Test
+    public void AttributNumber() {
+        General.clickMenu("FtDomain", "FtAttributes");
+
+        Form.create();
+        $("#field_ftAttrShortText").setValue("htmlTest18");
+
+        ChechNumber("field_ftAttrInteger", "54025", "54,025");
+        ChechNumber("field_ftAttrIntegerMonetary", "57421", "57,421");
+        ChechNumber("field_ftAttrIntegerEuro", "50575", "50,575");
+        ChechNumber("field_ftAttrDecimal", "81.04", "81.04");
+        ChechNumber("field_ftAttrDecimalMonetary", "5458781.04", "5,458,781.04");
+        ChechNumber("field_ftAttrDecimalEuro", "50575.54", "50,575.54");
+        CheckPourcentageBar("field_ftAttrIntegerProgressBar", "pbar_field_ftAttrIntegerProgressBar", "52", "52%");
+        CheckPourcentageBar("field_ftAttrDecimalProgressBar", "pbar_field_ftAttrDecimalProgressBar", "0.63", "63%");
+        CheckPourcentage("field_ftAttrDecimalPercentage", "ftAttrDecimalPercentage", "0.65", "65%");
+        CheckPourcentage("field_ftAttrIntegerPercentage", "ftAttrIntegerPercentage", "43", "43%");
+        AttributStar("ftAttrIntegerStars", "5");
+        Form.setSliderValue(0, 6);
+        AttributCalculator("ftAttrDecimalCalculator", "52 + 64", "116.00");
+
+        Form.save();
+    }
+
+    private static void AttributCalculator(String field, String operation, String result) {
+        SelenideElement cal = $("[data-field=\"" + field+ "\"]");
+        $("[data-action=\"bcalc_field_ftAttrDecimalCalculator\"]").click();
+        for ( var i: operation.toCharArray()) {
+            if (i != ' ')
+                cal.find(".calculator").find(byText(String.valueOf(i))).click();
+        }
+        cal.find(".calculator").find(byText("Ok")).click();
+        $("[data-action=\"bcalc_field_ftAttrDecimalCalculator\"]").click();
+        Assertions.assertEquals(result, cal.find(".calculator").find(byName("result")).getValue());
+    }
+
+    //problem with change with star
+    private static void AttributStar(String field, String value) {
+        SelenideElement element = $("[data-field=\""+ field + "\"]");
+        element.find("[title=\"" + value + "\"]").click();
+    }
+
+    private static void CheckPourcentage(String id, String field, String value, String expected) {
+        SelenideElement prctage = $("#" + id);
+        prctage.setValue(value);
+
+        Form.save();
+        Assertions.assertEquals(expected, $("[data-field=\"" + field + "\"]").find(".render").getText());
+    }
+
+
 }

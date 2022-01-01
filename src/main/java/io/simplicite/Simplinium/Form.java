@@ -3,11 +3,11 @@ package io.simplicite.Simplinium;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 
 import java.time.Duration;
 import java.util.Random;
-
 import static com.codeborne.selenide.Selenide.$;
 
 public class Form {
@@ -29,15 +29,15 @@ public class Form {
     /**
      * Use to move slider in Simplicité
      *
-     * @param id    ID of the slider
      * @param value Value need to be reached by the slider
      */
-    public static void setSliderValue(String id, int value) {
-        SelenideElement slider = $("#" + id);
-        for (int i = 1; i < value; i++) {
+    public static void setSliderValue(int min, int value) {
+        SelenideElement slider = $("#field_ftAttrIntegerSlider");
+        for (int i = min; i < value; i++) {
             slider.sendKeys(Keys.ARROW_RIGHT);
             Selenide.sleep(200);
         }
+        Assertions.assertEquals(Integer.toString(value), slider.parent().text());
     }
 
     /**
@@ -52,6 +52,7 @@ public class Form {
      */
     public static void save() {
         $("button[data-action=\"save\"]").shouldBe(Condition.visible).click();
+        Selenide.sleep(1000);
         $(".alert").should(Condition.and("saverule", Condition.exist, Condition.text("Save OK.")));
     }
 
