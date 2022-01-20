@@ -4,25 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.simplicite.Simplinium.Demo2Dec</groupId>
-    <artifactId>Demo2Dec</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>Demo2Dec</name>
+    <groupId>io.simplicite.demo</groupId>
+    <artifactId>testui-module-demo</artifactId>
+    <version>1.0.2</version>
+    <name>testui-module-demo</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>16</maven.compiler.target>
         <maven.compiler.source>16</maven.compiler.source>
-        <junit.version>5.8.1</junit.version>
+        <junit.version>5.8.2</junit.version>
     </properties>
 
     <dependencies>
-        <!-- Use for implementation of test on the ui Simplicite (Stable) -->
         <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>selenide</artifactId>
-            <version>6.1.1</version>
-            <scope>compile</scope>
+            <groupId>io.simplicite.simplinium</groupId>
+            <artifactId>simplinium</artifactId>
+            <version>1.0.4</version>
         </dependency>
         <!-- Use for the execution of test with JUnit 5 on Java for Selenide (Stable) -->
         <dependency>
@@ -37,20 +35,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Not really needed Use for diagnostic log on Selenide (Stable) serve as a simple facade for frameworks-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.32</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>selenide-core</artifactId>
-            <version>6.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
     <build>
         <plugins>
