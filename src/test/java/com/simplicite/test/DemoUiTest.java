@@ -1,34 +1,20 @@
 package com.simplicite.test;
 
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
+import io.simplicite.Simplinium.Config;
 import io.simplicite.simplinium.Process;
 import io.simplicite.simplinium.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 
-import java.io.BufferedOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.$;
 
 @ExtendWith({ScreenShooterExtension.class})
 public class DemoUiTest {
-
-    private final static Properties PROPERTIES = new Properties();
 
     @BeforeAll
     public static void setUpAll() {
@@ -47,13 +33,6 @@ public class DemoUiTest {
         Config.saveBrowserLogs();
     }
 
-    @BeforeEach
-    public void setUp() {
-        if (SessionManagement.isAuthentificationPage()) {
-            SessionManagement.connect(PROPERTIES.getProperty("name"), PROPERTIES.getProperty("password"));
-        }
-    }
-
 
     @Test
     public void createOrderCli1() {
@@ -62,12 +41,12 @@ public class DemoUiTest {
 
     @Test
     public void createOrderCli2() {
-        createOrderThroughProcess("CLI002", "DY", 5, 582);
+        createOrderThroughProcess("CLI002", "DY", 3, 582);
     }
 
     @Test
     public void createOrderCli3() {
-        createOrderThroughProcess("CLI003", "LLED", 5, 550);
+        createOrderThroughProcess("CLI003", "LLED", 6, 550);
     }
 
     @Test
