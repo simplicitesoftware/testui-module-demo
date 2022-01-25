@@ -2,14 +2,12 @@ package com.simplicite.test;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import io.simplicite.Simplinium.Config;
 import io.simplicite.simplinium.Process;
 import io.simplicite.simplinium.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Objects;
-import java.util.Properties;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -18,6 +16,8 @@ public class DemoUiTest {
 
     @BeforeAll
     public static void setUpAll() {
+        Config.url = "https://ggally.demo.simplicite.io/";
+        Config.password = "designer1903";
         Config.init();
         Selenide.open(Config.url);
     }
@@ -74,7 +74,7 @@ public class DemoUiTest {
         Process.nextPage();
 
         // Select quantity
-        Form.setSliderValue("field_demoOrdQuantity", quantity);
+        Form.setSliderValue("field_demoOrdQuantity", 1, quantity);
         Process.nextPage();
 
         String expectedTotal = Integer.toString(quantity * expectedPrice);

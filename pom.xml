@@ -6,7 +6,7 @@
 
     <groupId>io.simplicite.demo</groupId>
     <artifactId>testui-module-demo</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <name>testui-module-demo</name>
 
     <properties>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>io.simplicite.simplinium</groupId>
             <artifactId>simplinium</artifactId>
-            <version>1.0.4</version>
+            <version>1.1.2</version>
         </dependency>
         <!-- Use for the execution of test with JUnit 5 on Java for Selenide (Stable) -->
         <dependency>
