@@ -30,7 +30,7 @@ public class DemoUiTest {
 
     @AfterAll
     public static void close() {
-        Config.saveBrowserLogs();
+        Config.saveBrowserLogs("./build/reports/tests/com/browser.log");
     }
 
 
