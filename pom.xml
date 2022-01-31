@@ -20,7 +20,7 @@
         <dependency>
             <groupId>io.simplicite.simplinium</groupId>
             <artifactId>simplinium</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.7</version>
         </dependency>
         <!-- Use for the execution of test with JUnit 5 on Java for Selenide (Stable) -->
         <dependency>
@@ -33,6 +33,13 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Logging / Reporting-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.32</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -23,7 +23,7 @@ public class DemoUiTest {
 
     @AfterAll
     public static void close() {
-        Config.saveBrowserLogs("./build/reports/tests/com/browser.log");
+        Config.saveBrowserLogs("./build/browser.log");
     }
 
     @Test
@@ -31,12 +31,12 @@ public class DemoUiTest {
         createOrderThroughProcess("CLI001", "BIM", 5, 850);
     }
 
-    @Test
+    //@Test
     public void createOrderCli2() {
         createOrderThroughProcess("CLI002", "DY", 3, 582);
     }
 
-    @Test
+    //@Test
     public void createOrderCli3() {
         createOrderThroughProcess("CLI003", "LLED", 6, 550);
     }
