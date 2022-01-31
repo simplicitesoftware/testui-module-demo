@@ -1,23 +1,16 @@
-package com.simplicite.test;
-
+import java.util.Objects;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.junit5.ScreenShooterExtension;
-import io.simplicite.simplinium.Process;
-import io.simplicite.simplinium.*;
+import static com.codeborne.selenide.Selenide.$;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import io.simplicite.simplinium.*;
+import io.simplicite.simplinium.Process;
 
-import java.util.Objects;
-
-import static com.codeborne.selenide.Selenide.$;
-
-@ExtendWith({ScreenShooterExtension.class})
+@ExtendWith({com.codeborne.selenide.junit5.ScreenShooterExtension.class})
 public class DemoUiTest {
 
     @BeforeAll
     public static void setUpAll() {
-        Config.url = "https://ggally.demo.simplicite.io/";
-        Config.password = "designer1903";
         Config.init();
         Selenide.open(Config.url);
     }
@@ -32,7 +25,6 @@ public class DemoUiTest {
     public static void close() {
         Config.saveBrowserLogs("./build/reports/tests/com/browser.log");
     }
-
 
     @Test
     public void createOrderCli1() {
